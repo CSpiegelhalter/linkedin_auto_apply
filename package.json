@@ -1,0 +1,25 @@
+{
+  "name": "linkedin_auto_apply",
+  "version": "1.0.0",
+  "description": "Automated way of applying to jobs on linkedin",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CSpiegelhalter/linkedin_auto_apply.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CSpiegelhalter/linkedin_auto_apply/issues"
+  },
+  "homepage": "https://github.com/CSpiegelhalter/linkedin_auto_apply#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.40.1",
+    "@types/node": "^20.10.5"
+  },
+  "dependencies": {
+    "playwright": "^1.40.1"
+  }
+}
