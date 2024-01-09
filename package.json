@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "description": "Automated way of applying to jobs on linkedin",
   "main": "index.js",
-  "scripts": {},
+  "type": "module",
+  "scripts": {
+    "run": "npx tsx main.ts"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/CSpiegelhalter/linkedin_auto_apply.git"
@@ -17,7 +20,8 @@
   "homepage": "https://github.com/CSpiegelhalter/linkedin_auto_apply#readme",
   "devDependencies": {
     "@playwright/test": "^1.40.1",
-    "@types/node": "^20.10.5"
+    "@types/node": "^20.10.5",
+    "tsx": "^4.7.0"
   },
   "dependencies": {
     "@pdf-lib/standard-fonts": "^1.0.0",
@@ -25,6 +29,8 @@
     "dotenv": "^16.3.1",
     "pdf-lib": "^1.17.1",
     "pdfkit": "^0.14.0",
-    "playwright": "^1.40.1"
+    "playwright": "^1.40.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
   }
 }

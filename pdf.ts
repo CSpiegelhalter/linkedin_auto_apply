@@ -1,5 +1,6 @@
-const PDFDocument = require("pdfkit");
-const fs = require("fs");
+// const PDFDocument = require("pdfkit");
+import PDFDocument from "pdfkit";
+import fs from "fs";
 
 export function createPdf(text) {
   // Create a document

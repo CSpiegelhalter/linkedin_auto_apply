@@ -1,8 +1,8 @@
-require("dotenv").config();
-
-import { Console } from "console";
-import { chromium, Page } from "playwright";
+import { configDotenv } from "dotenv";
+import { BrowserContext, chromium, Page } from "playwright";
 import { apply } from "./application";
+
+configDotenv()
 
 async function openBrowser() {
   return await chromium.launch({ headless: false });
@@ -50,6 +50,11 @@ const easyApplyOnly = () => async (page: Page) => {
   );
 };
 
+const pastDayPosts = () => async (page: Page) => {
+  const pastDayXpath = "//label[p/span[text()='Past 24 hours']]";
+  await page.click(pastDayXpath);
+};
+
 const openFilters = () => async (page: Page) => {
   console.log("Easy apply jobs only...");
   await page.click(
@@ -67,14 +72,27 @@ const doesNextPageExist = (pageNumber: number) => async (page: Page) => {
 const getValidJobs = () => async (page: Page) => {
   console.log("Grabbing all valid jobs to apply to...");
   const hrefs = await page.evaluate(() => {
-    const allElements = document.querySelectorAll(
-      ".scaffold-layout__list-container > li > div > div > div > div:nth-child(2) > div > a"
+    const everyCard = Array.from(
+      document.querySelectorAll(
+        ".scaffold-layout__list-container > li > div > div"
+      )
     );
-    const filteredAnchors = Array.from(allElements).filter((anchor) => {
-      // Check if the parent `li` has the disqualifying structure
-      return !anchor.closest("li").querySelector("li > div > ul > li > strong");
+
+    const alreadyApplied = everyCard.filter((ele) => {
+      const element = ele.querySelector(
+        "ul > li > strong > span"
+      ) as HTMLElement;
+      return !element?.innerText?.includes("Applied");
     });
-    return filteredAnchors.map((ele) => ele.getAttribute("href"));
+
+    const links = alreadyApplied.map((ele) => {
+      // Query for the specific "a" element within each card
+      const link = ele.querySelector("div > div:nth-child(2) > div > a");
+      return link; // This will be an Element or null if not found
+    });
+    const validLinks = links.filter((link) => !!link);
+
+    return validLinks.map((ele) => ele.getAttribute("href"));
   });
   console.log(hrefs.length);
   return hrefs;
@@ -137,6 +155,10 @@ const scrollForLazyLoadedJobs = () => async (page: Page) => {
   await page.waitForTimeout(1000);
 };
 
+async function test(context: BrowserContext) {
+  await apply({ url: `https://www.linkedin.com$}`, context });
+}
+
 async function main() {
   const browser = await openBrowser();
   const context = await browser.newContext();
@@ -149,9 +171,14 @@ async function main() {
 
     await gotoJobs()(page);
 
+    // Used to test specific applications
+    // await test(context);
+
     await searchForJobs()(page);
 
     await openFilters()(page);
+
+    await pastDayPosts()(page);
 
     await enableRemoteOnly()(page);
 
@@ -170,9 +197,13 @@ async function main() {
       const hrefs = await getValidJobs()(page);
 
       for (const url of hrefs) {
+        console.log(`Successfully aplied for ${jobsAppliedFor} jobs`);
         try {
-          await apply({ url: `https://www.linkedin.com${url}`, context });
-          jobsAppliedFor++;
+          const success = await apply({
+            url: `https://www.linkedin.com${url}`,
+            context,
+          });
+          if (success) jobsAppliedFor++;
         } catch (e) {
           console.log(
             `Failed to apply for https://www.linkedin.com${url} \n\n${e}`
@@ -192,7 +223,7 @@ async function main() {
       }
     }
   } finally {
-    console.log(`Successfully applied for: ${jobsAppliedFor} jobs`);
+    console.log(`Successfully applied for: ${jobsAppliedFor} jobs total`);
     console.log("Waiting....");
     await page.waitForTimeout(1000000);
     await browser.close();
