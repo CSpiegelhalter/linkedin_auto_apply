@@ -36,6 +36,7 @@ const closePage = async (page: Page) => {
 };
 
 const isOnPage = async (page: Page, xpath: string): Promise<boolean> => {
+  console.log(`Checking if on correct page. Xpath: ${xpath}`);
   const exists = await page.evaluate(
     (args) => {
       const matchingElement = document.evaluate(
@@ -93,18 +94,26 @@ export const apply = async ({ url, context }: Apply): Promise<boolean> => {
     return false;
   }
 
-  const description = await page.evaluate(() => {
-    let description = "";
-    const block = document.querySelector("#job-details > span");
-    const children = Array.from(block?.children);
+  console.log("Getting description...");
 
-    for (const child of children) {
-      const text = child as HTMLElement;
-      description += text.innerText;
-      description += "\n";
-    }
-    return description;
-  });
+  let description: string;
+  try {
+    description = await page.evaluate(() => {
+      let description = "";
+      const block = document.querySelector("#job-details > span");
+      const children = Array.from(block?.children);
+
+      for (const child of children) {
+        const text = child as HTMLElement;
+        description += text.innerText;
+        description += "\n";
+      }
+      return description;
+    });
+  } catch {
+    console.log("Failed to get descsription...");
+  }
+
 
   await page.waitForTimeout(1500);
 
@@ -214,7 +223,7 @@ const handleDynamicSteps = async (
       page,
       xpath: cityInputXpath,
       errorMessage: "Failed to fill in the city",
-      fillValue: "Pace, Florida, United States",
+      fillValue: "Los Angeles, California, United States",
     });
   }
 
@@ -255,7 +264,7 @@ const handleDynamicSteps = async (
     return await handleDynamicSteps(page, description);
   }
 
-  if (coverLetterOnPage) {
+  if (coverLetterOnPage && description) {
     console.log("Cover letter page...");
     coverLetterMessage = await createCoverletter(description);
 
@@ -297,7 +306,7 @@ const handleDynamicSteps = async (
       page,
       xpath: inputsXPath,
       errorMessage: "Failed to fill out years experience questions",
-      fillValue: "3",
+      fillValue: "4",
     });
 
     const currentlyAnEmployeeXpath =
