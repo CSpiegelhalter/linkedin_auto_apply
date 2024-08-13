@@ -10,6 +10,8 @@ Automated way of applying to jobs on linkedin
 4. (Optional) Add `CHAT_GPT_API_KEY=yourapikey` (this is to create a cover letter)
 5. Add `FULL_NAME=First Last`
 
-# How to run fucking ts files:
+
+
+# How to run:
 
 `npx tsx main.ts`

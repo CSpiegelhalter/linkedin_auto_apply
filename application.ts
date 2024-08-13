@@ -100,7 +100,7 @@ export const apply = async ({ url, context }: Apply): Promise<boolean> => {
   try {
     description = await page.evaluate(() => {
       let description = "";
-      const block = document.querySelector("#job-details > span");
+      const block = document.querySelector("#job-details > div");
       const children = Array.from(block?.children);
 
       for (const child of children) {
@@ -113,6 +113,8 @@ export const apply = async ({ url, context }: Apply): Promise<boolean> => {
   } catch {
     console.log("Failed to get descsription...");
   }
+
+  console.log(description)
 
 
   await page.waitForTimeout(1500);
