@@ -19,11 +19,3 @@ export interface BotAction<R = any> extends BaseFunction {
 }
 
 export type AllActions = typeof actions
-
-// export interface Page {
-//     goto(url: string, options?: {
-//         referer?: string,
-//         timeout?: number,
-//         waitUntil?: 'load' | 'domcontentloaded' | 'networkidle'
-//     })
-// }
