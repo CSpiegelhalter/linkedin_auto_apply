@@ -7,6 +7,13 @@ export const JOB_TITLE = "Software Engineer";
 
 export const REMOTE_ONLY = true;
 
+// Too many questions to ask. Assumes this is the amount of experience you have for all skills
+export const YEARS_EXPERIENCE = '4'
+
+export const SALARY_RATE = '90000'
+
+export const HOURLY_RATE = '40'
+
 export const COMPANIES_TO_AVOID = [
   "CapTech",
   "Jobot",

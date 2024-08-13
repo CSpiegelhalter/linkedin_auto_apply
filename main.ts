@@ -1,6 +1,8 @@
 import { configDotenv } from "dotenv";
 import { BrowserContext, Page } from "playwright";
-import { apply } from "./application";
+// import { apply } from "./application";
+import { apply } from "./dynamicApp";
+
 import { buttons } from "./selectors";
 import { urls } from "./constants";
 import { initializeBot } from "./init";
@@ -27,9 +29,9 @@ const doesNextPageExist = (pageNumber: number) => async (page: Page) => {
   return !!exists;
 };
 
-async function test(context: BrowserContext) {
-  await apply({ url: `https://www.linkedin.com$}`, context });
-}
+// async function test(context: BrowserContext) {
+//   await apply({ url: `https://www.linkedin.com$}`, context });
+// }
 
 const jobSearch = (): BotAction => async (bot: Bot) => {
   const { click } = bot.actions;
@@ -66,10 +68,7 @@ async function main() {
       for (const url of hrefs) {
         log(`Successfully aplied for ${bot.jobsAppliedFor} jobs`);
         try {
-          const success = await apply({
-            url: `https://www.linkedin.com${url}`,
-            context: bot.context,
-          });
+          const success = await apply(`https://www.linkedin.com${url}`)(bot);
           if (success) bot.jobsAppliedFor++;
         } catch (e) {
           console.log(
