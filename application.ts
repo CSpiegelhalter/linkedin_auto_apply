@@ -65,10 +65,6 @@ function getFormattedDate(date) {
 export const apply = async ({ url, context }: Apply): Promise<boolean> => {
   const page = await context.newPage();
 
-  const testUrl =
-    "https://www.linkedin.com/jobs/view/3726600309/?eBP=CwEAAAGM1rc0ekFbGcYy_oioTMg8DbW4XPaPVUqp4sNJ1UqAo9SBQ_G2463eAVZVqomDVe_rkKP_cJWQaUSrAjB8XbvBnCtGmd2GRuG8Khn0tFCr6Wf7t4ByEa2BUvrVf8Ajepa30iLG655-EUVjRGPkLl_xWrWoq2JAJxJ8drW2CPA5iY-pFAcL8MrZEvSauwvGUaMxS_VjZqy8_0rHomSFMe-qMVPQjEBLui_uhVhyYgKfTHBUnQTiOb0dPKmCr2vPz0ZCqcXlR9E0XcuNQC66LkTaNTQrOwYZkCwg1D22QDtztuAPb6NanzPsVc8oVgTW10b7C8K-4X9-_UxgnYB7tmK28uIZQGdPfzx08h86j0_az0_jilW-qojLmPTvHgieOeTnPgY&refId=48l6bUxB67OuuXGbem4TkA%3D%3D&trackingId=hpB9H3QWNQlplsS9IpSe2g%3D%3D&trk=flagship3_search_srp_jobs";
-  const hardCoded =
-    "https://www.linkedin.com/jobs/view/3784801818/?eBP=CwEAAAGM1rAKNIw8AW_wZAQ6CKfiG3aIDrkd5CcPOVYDqa8EGVVONNnTNsoiUIQTePKEiQ3KkNadHh9bnNarY0zTZ08PRrS2evXYfVSQastgz0zeX42c1UZ9i4m_OISct9vT8ApfQAlTwi4dQ1JTefBtpxoKY7GU7qvbWKL1fBk8DY5dmfuA-9MjcPr6ZNni0Hm9ZBh-AtITlBwZTt0ZFKjYWIDk3p9GjnkxcTP7xfpy-KS7D4w6bswOajHUf71lFb2RpEKnODN21gqWxXhUARFzeN4hWQ-mR3UStBc3CGkKuhhv4n5rPc7QMl-TNFN4U8wQgw2G9XymU6jRbASiusdEseq0_pQ0mxDGQzKhSdfDNZBPyEAqlQrxeSE56xuqDXxbMZVkgqZIvHhczh8&refId=t%2Ftu%2FFPn993UEkik%2BxzM0g%3D%3D&trackingId=wftMuY2De3Gf51%2Fkvh3Glw%3D%3D&trk=flagship3_search_srp_jobs";
   await page.goto(url);
 
   console.log(`Job posting: ${url} \n`);
@@ -114,8 +110,7 @@ export const apply = async ({ url, context }: Apply): Promise<boolean> => {
     console.log("Failed to get descsription...");
   }
 
-  console.log(description)
-
+  console.log(description);
 
   await page.waitForTimeout(1500);
 
@@ -393,8 +388,6 @@ const handleDynamicSteps = async (
             console.log(`Failed to make hear about us selection... ${e}`);
           }
         }
-        console.log("HEYYYY BOIIIII");
-        console.log(values);
       } catch (e) {
         console.log(`Failed to tell them how we hear about them... ${e}`);
       }

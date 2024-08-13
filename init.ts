@@ -12,6 +12,8 @@ export const initializeBot = async (): Promise<Bot> => {
     context,
     browser,
     actions,
-    jobsAppliedFor: 0
+    applyPage: null,
+    jobsAppliedFor: 0,
+    retries: 0,
   };
-}
+};

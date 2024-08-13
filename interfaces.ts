@@ -9,7 +9,9 @@ export interface Bot {
     browser: Browser
     context: BrowserContext
     page: Page
+    applyPage: Page
     jobsAppliedFor: number
+    retries: number
 }
 
 export interface BotAction<R = any> extends BaseFunction {

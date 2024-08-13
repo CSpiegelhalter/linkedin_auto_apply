@@ -1,5 +1,5 @@
 import { configDotenv } from "dotenv";
-import { BrowserContext, chromium, Page } from "playwright";
+import { BrowserContext, Page } from "playwright";
 import { apply } from "./application";
 import { buttons } from "./selectors";
 import { urls } from "./constants";
@@ -49,7 +49,6 @@ async function main() {
   const bot = await initializeBot();
   const { goto } = bot.actions;
 
-  let jobsAppliedFor = 0;
   try {
     await goto({ url: urls.LOGIN })(bot);
 
@@ -91,7 +90,7 @@ async function main() {
       }
     }
   } finally {
-    console.log(`Successfully applied for: ${jobsAppliedFor} jobs total`);
+    console.log(`Successfully applied for: ${bot.jobsAppliedFor} jobs total`);
     console.log("Waiting....");
     // await page.waitForTimeout(1000000);
     // await browser.close();

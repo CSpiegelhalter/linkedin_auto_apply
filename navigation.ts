@@ -65,7 +65,7 @@ export const easyApplyFilter = (): BotAction => async (bot: Bot) => {
   const { click, waitForTimeout } = bot.actions;
 
   log("Easy apply jobs only...");
-  await click({ selector: buttons.EASY_APPLY })(bot);
+  await click({ selector: buttons.EASY_APPLY_FILTER })(bot);
   await waitForTimeout({ timeout: 1500 })(bot);
 };
 
