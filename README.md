@@ -18,3 +18,7 @@ Go to the `constants.ts` file and look over what you will be filling in. You can
 # How to run:
 
 `npx tsx main.ts` or just `npm run`
+
+# IMPORTANT
+
+This script does its best to go through the application process, but each job posting on LinkedIn can be different so there could be things I did not account for. It may hang/skip postings after a while of trying and it could fill in some inputs with something you did not expect (ie. fills in an hourly rate with your number of years of experience)
