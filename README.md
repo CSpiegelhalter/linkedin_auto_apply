@@ -17,7 +17,13 @@ Go to the `constants.ts` file and look over what you will be filling in. You can
 
 # How to run:
 
-`npx tsx main.ts` or just `npm run`
+`npx tsx main.ts` or just `npm run-script run`
+
+# Testing
+
+If you come across a job posting that breaks, you can try to fix it by inserting the URL in the `TEST_URL` in the `constants.ts` file then run `TEST=true npm run-script run` or `TEST=true npx tsx main.ts`
+
+This allows you to just go to the broken path and you can work to fix it.
 
 # IMPORTANT
 

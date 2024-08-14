@@ -63,3 +63,5 @@ export const JOB_KEYWORDS_TO_AVOID = [
   "Microsoft",
   "Flutter"
 ];
+
+export const TEST_URL = ''
