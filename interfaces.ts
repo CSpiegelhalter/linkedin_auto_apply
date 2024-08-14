@@ -9,7 +9,6 @@ export interface Bot {
     browser: Browser
     context: BrowserContext
     page: Page
-    applyPage: Page
     jobsAppliedFor: number
     retries: number
 }

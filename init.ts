@@ -1,19 +1,5 @@
-import { Bot } from "./interfaces";
-import { chromium } from "playwright";
-import * as actions from "./actions/index";
+import { NodeBot } from "./Bot";
 
-export const initializeBot = async (): Promise<Bot> => {
-  const browser = await chromium.launch({ headless: false });
-  const context = await browser.newContext();
-  const page = await context.newPage();
-
-  return {
-    page,
-    context,
-    browser,
-    actions,
-    applyPage: null,
-    jobsAppliedFor: 0,
-    retries: 0,
-  };
+export const initializeBot = async (): Promise<NodeBot> => {
+  return await NodeBot.getInstance();
 };

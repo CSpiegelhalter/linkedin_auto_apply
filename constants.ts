@@ -61,4 +61,5 @@ export const JOB_KEYWORDS_TO_AVOID = [
   "Enterprise",
   "Artificial",
   "Microsoft",
+  "Flutter"
 ];

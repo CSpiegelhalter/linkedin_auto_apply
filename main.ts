@@ -11,6 +11,7 @@ import {
   easyApplyFilter,
   getValidJobs,
   gotoJobs,
+  jobApplyLoop,
   lastDayPosts,
   login,
   openFilters,
@@ -20,18 +21,16 @@ import {
 } from "./navigation";
 import * as constants from "./constants";
 import { Bot, BotAction } from "./interfaces";
+import { NodeBot } from "./Bot";
 
 configDotenv();
-
-const doesNextPageExist = (pageNumber: number) => async (page: Page) => {
-  console.log(`Checking if page ${pageNumber} exists...`);
-  const exists = await page.$(`//button[@aria-label='Page ${pageNumber}']`);
-  return !!exists;
-};
 
 // async function test(context: BrowserContext) {
 //   await apply({ url: `https://www.linkedin.com$}`, context });
 // }
+
+// TO test
+// https://www.linkedin.com/jobs/view/4000545974/?eBP=CwEAAAGRTqVKQuW4uLuJOKhD6b_ieYj-53C8HsUdFngCEzzW-y33gYlmztNUYsJsN68E3EduZL79726BpfbGApAjFg5lw2HKdJWumjk3tfDcKl2o3YMAjV4mpYqM-TGg_r8cBBrXb5_8mmSA6KRmGlMOpG0nGyQyrbnjzZNdF5bD4cPQWC8LTebWiBZxN_MWLecJeAphb-0cWsVaQScCkGWmillHXSlCYz8mEL_R-ORquDCEQ3QxOuXWYQ_uXUMupxCImD77x1PpRllmEdr1bV6-DiOYuvYurWa6GL1GJ8PBKkcZZNP1ny0fakkjINgMFbHEGh-_eIasgJAPQa0Y7utzBBJpjN4SW_85N3jGpXwucVH5g45Rf2r9Xz3hXqKNhuEBcwSdqyV9fvhGnRL-egCbf2IVwS_Mcvbo4UNTLI37sJuzJ9lm1_3-Q7WoU-oBavwiqSIBTvfgRwMe0UXqsokW2On4cwDGQJk&refId=H1Z1SucyQuSm0MSAXk%2FdjQ%3D%3D&trackingId=Op3ELOgGPJUyYP%2B6mkdG4g%3D%3D&trk=flagship3_search_srp_jobs
 
 const jobSearch = (): BotAction => async (bot: Bot) => {
   const { click } = bot.actions;
@@ -58,44 +57,20 @@ async function main() {
 
     await jobSearch()(bot);
 
-    let loop = true;
-    let currentPage = 1;
-
-    while (loop) {
-      await scrollForLazyLoadedJobs()(bot);
-      const hrefs = await getValidJobs()(bot);
-
-      for (const url of hrefs) {
-        log(`Successfully aplied for ${bot.jobsAppliedFor} jobs`);
-        try {
-          const success = await apply(`https://www.linkedin.com${url}`)(bot);
-          if (success) bot.jobsAppliedFor++;
-        } catch (e) {
-          console.log(
-            `Failed to apply for https://www.linkedin.com${url} \n\n${e}`
-          );
-        }
-      }
-
-      const totalPages = await doesNextPageExist(currentPage + 1)(bot.page);
-      if (totalPages) {
-        currentPage++;
-        const button = await bot.page.$(
-          `//button[@aria-label='Page ${currentPage}']`
-        );
-        await button.click();
-      } else {
-        loop = false;
-      }
-    }
+    await jobApplyLoop()(bot);
   } finally {
-    console.log(`Successfully applied for: ${bot.jobsAppliedFor} jobs total`);
-    console.log("Waiting....");
-    // await page.waitForTimeout(1000000);
-    // await browser.close();
-    console.log("Browser closed!");
+    log(`Successfully applied for: ${bot.jobsAppliedFor} jobs total`);
+    await bot.browser.close();
+    log("Browser closed!");
   }
 }
+
+process.on("SIGINT", async () => {
+  log("Caught interrupt signal (Ctrl + C)");
+  const bot = await NodeBot.getInstance();
+  log(`Succesfully applied for: ${bot.jobsAppliedFor} jobs total`);
+  process.exit();
+});
 
 main().then(() => {
   console.log("All done!");

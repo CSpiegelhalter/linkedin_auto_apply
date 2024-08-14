@@ -2,6 +2,7 @@ import { Bot, BotAction } from "./interfaces";
 import { log } from "./utils";
 import { buttons, input, view } from "./selectors";
 import * as constants from "./constants";
+import { apply } from "./dynamicApp";
 
 export const login = (): BotAction => async (bot: Bot) => {
   const { waitForSelector, fill, click } = bot.actions;
@@ -153,5 +154,46 @@ export const getValidJobs = (): BotAction => async (bot: Bot) => {
     return hrefs;
   } catch (e) {
     console.log(`Could not get valid jobs: ${e}`);
+  }
+};
+
+const doesNextPageExist =
+  (pageNumber: number): BotAction =>
+  async (bot: Bot) => {
+    log(`Checking if page ${pageNumber} exists...`);
+    const exists = await bot.page.$(
+      `//button[@aria-label='Page ${pageNumber}']`
+    );
+    return !!exists;
+  };
+
+export const jobApplyLoop = (): BotAction => async (bot: Bot) => {
+  let loop = true;
+  let currentPage = 1;
+
+  while (loop) {
+    await scrollForLazyLoadedJobs()(bot);
+    const hrefs = await getValidJobs()(bot);
+
+    for (const url of hrefs) {
+      log(`Successfully aplied for ${bot.jobsAppliedFor} jobs`);
+      try {
+        const success = await apply(`https://www.linkedin.com${url}`)(bot);
+        if (success) bot.jobsAppliedFor++;
+      } catch (e) {
+        log(`Failed to apply for https://www.linkedin.com${url} \n\n${e}`);
+      }
+    }
+
+    const totalPages = await doesNextPageExist(currentPage + 1)(bot.page);
+    if (totalPages) {
+      currentPage++;
+      const button = await bot.page.$(
+        `//button[@aria-label='Page ${currentPage}']`
+      );
+      await button.click();
+    } else {
+      loop = false;
+    }
   }
 };
