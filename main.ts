@@ -1,12 +1,12 @@
-import { configDotenv } from "dotenv";
-import { BrowserContext, Page } from "playwright";
+import { configDotenv } from 'dotenv'
+import { BrowserContext, Page } from 'playwright'
 // import { apply } from "./application";
-import { apply } from "./dynamicApp";
+import { apply } from './dynamicApp'
 
-import { buttons } from "./selectors";
-import { urls } from "./constants";
-import { initializeBot } from "./init";
-import { log } from "./utils";
+import { buttons } from './selectors'
+import { urls } from './constants'
+import { initializeBot } from './init'
+import { log } from './utils'
 import {
   easyApplyFilter,
   getValidJobs,
@@ -18,12 +18,13 @@ import {
   remoteOnly,
   scrollForLazyLoadedJobs,
   searchForJobs,
-} from "./navigation";
-import * as constants from "./constants";
-import { Bot, BotAction } from "./interfaces";
-import { NodeBot } from "./Bot";
+} from './navigation'
+import * as constants from './constants'
+import { Bot, BotAction } from './interfaces'
+import { NodeBot } from './Bot'
+import test from 'node:test'
 
-configDotenv();
+configDotenv()
 
 // async function test(context: BrowserContext) {
 //   await apply({ url: `https://www.linkedin.com$}`, context });
@@ -35,50 +36,50 @@ configDotenv();
 const jobSearch =
   (): BotAction =>
   async (bot: Bot): Promise<void> => {
-    const { click } = bot.actions;
+    const { click } = bot.actions
 
-    log("Job Search...");
-    await gotoJobs()(bot);
-    await searchForJobs(constants.JOB_TITLE)(bot);
-    await openFilters()(bot);
-    await lastDayPosts()(bot);
-    await remoteOnly()(bot);
-    await easyApplyFilter()(bot);
+    log('Job Search...')
+    await gotoJobs()(bot)
+    await searchForJobs(constants.JOB_TITLE)(bot)
+    await openFilters()(bot)
+    await lastDayPosts()(bot)
+    await remoteOnly()(bot)
+    await easyApplyFilter()(bot)
 
-    await click({ selector: buttons.SEARCH })(bot);
-  };
+    await click({ selector: buttons.SEARCH })(bot)
+  }
 
 async function main() {
-  const bot = await initializeBot();
-  const { goto } = bot.actions;
+  const bot = await initializeBot()
+  const { goto } = bot.actions
 
   try {
-    log(process.env.TEST);
-    await goto({ url: urls.LOGIN })(bot);
+    log(process.env.TEST)
+    await goto({ url: urls.LOGIN })(bot)
 
-    await login()(bot);
+    await login()(bot)
 
     if (process.env.TEST) {
-      
+      await test(constants.TEST_URL)
     } else {
-      await jobSearch()(bot);
-      await jobApplyLoop()(bot);
+      await jobSearch()(bot)
+      await jobApplyLoop()(bot)
     }
   } finally {
-    log(`Successfully applied for: ${bot.jobsAppliedFor} jobs total`);
-    await bot.browser.close();
-    log("Browser closed!");
+    log(`Successfully applied for: ${bot.jobsAppliedFor} jobs total`)
+    await bot.browser.close()
+    log('Browser closed!')
   }
 }
 
-process.on("SIGINT", async () => {
-  log("Caught interrupt signal (Ctrl + C)");
-  const bot = await NodeBot.getInstance();
-  await bot.browser.close();
-  log(`Succesfully applied for: ${bot.jobsAppliedFor} jobs total`);
-  process.exit();
-});
+process.on('SIGINT', async () => {
+  log('Caught interrupt signal (Ctrl + C)')
+  const bot = await NodeBot.getInstance()
+  await bot.browser.close()
+  log(`Succesfully applied for: ${bot.jobsAppliedFor} jobs total`)
+  process.exit()
+})
 
 main().then(() => {
-  console.log("All done!");
-});
+  console.log('All done!')
+})

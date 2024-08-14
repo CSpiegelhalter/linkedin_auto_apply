@@ -1,7 +1,7 @@
-import axios from "axios";
+import axios from 'axios'
 
 export async function createCoverletter(description) {
-    const message = `Write a cover letter (5 paragraphs or less) in the format of:
+  const message = `Write a cover letter (5 paragraphs or less) in the format of:
       "Dear Hiring Manager,
       
       (write content here)
@@ -24,66 +24,64 @@ export async function createCoverletter(description) {
   "${description}"
       
   
-  `;
-  
-    const chatgptApiUrl = "https://api.openai.com/v1/chat/completions";
-    const data = {
-      // The request payload should be in a `data` property
-      model: "gpt-4",
-      messages: [
-        {
-          // Use `messages` array with the message object
-          role: "user",
-          content: message,
-        },
-      ],
-    };
-    const headers = {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${process.env.CHAT_GPT_API_KEY}`,
-    };
-  
-    try {
-      const result = await axios.post(chatgptApiUrl, data, { headers: headers });
-      return result.data.choices[0].message.content;
-  
-    } catch (e) {
-      console.log("====================================");
-      console.log(`Failed to reach Chat GPT api: ${e}`);
-      console.log("====================================");
-      return false
-    }
+  `
+
+  const chatgptApiUrl = 'https://api.openai.com/v1/chat/completions'
+  const data = {
+    // The request payload should be in a `data` property
+    model: 'gpt-4',
+    messages: [
+      {
+        // Use `messages` array with the message object
+        role: 'user',
+        content: message,
+      },
+    ],
+  }
+  const headers = {
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${process.env.CHAT_GPT_API_KEY}`,
   }
 
-export async function createShortDescription(description) {
-    const message = `Based off this description, write 2- 3 short sentences why I would want to work for the company: 
-    ${description}`;
-  
-    const chatgptApiUrl = "https://api.openai.com/v1/chat/completions";
-    const data = {
-      // The request payload should be in a `data` property
-      model: "gpt-4",
-      messages: [
-        {
-          // Use `messages` array with the message object
-          role: "user",
-          content: message,
-        },
-      ],
-    };
-    const headers = {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${process.env.CHAT_GPT_API_KEY}`,
-    };
-  
-    try {
-      const result = await axios.post(chatgptApiUrl, data, { headers: headers });
-      return result.data.choices[0].message.content;
-  
-    } catch (e) {
-      console.log("====================================");
-      console.log(`Failed to reach Chat GPT api: ${e}`);
-      console.log("====================================");
-      return false
-    }
+  try {
+    const result = await axios.post(chatgptApiUrl, data, { headers: headers })
+    return result.data.choices[0].message.content
+  } catch (e) {
+    console.log('====================================')
+    console.log(`Failed to reach Chat GPT api: ${e}`)
+    console.log('====================================')
+    return false
   }
+}
+
+export async function createShortDescription(description) {
+  const message = `Based off this description, write 2- 3 short sentences why I would want to work for the company: 
+    ${description}`
+
+  const chatgptApiUrl = 'https://api.openai.com/v1/chat/completions'
+  const data = {
+    // The request payload should be in a `data` property
+    model: 'gpt-4',
+    messages: [
+      {
+        // Use `messages` array with the message object
+        role: 'user',
+        content: message,
+      },
+    ],
+  }
+  const headers = {
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${process.env.CHAT_GPT_API_KEY}`,
+  }
+
+  try {
+    const result = await axios.post(chatgptApiUrl, data, { headers: headers })
+    return result.data.choices[0].message.content
+  } catch (e) {
+    console.log('====================================')
+    console.log(`Failed to reach Chat GPT api: ${e}`)
+    console.log('====================================')
+    return false
+  }
+}
