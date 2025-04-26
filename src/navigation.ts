@@ -186,7 +186,11 @@ export const jobApplyLoop = (): BotAction => async (bot: Bot) => {
       loop = false
     }
   }
-  for (const url of allUrls) {
+  const filteredUrls = allUrls.filter(url => url !== 'https://www.linkedin.com');
+  log(`Number of URLs found: ${filteredUrls.length}`)
+  for (let i = 0; i < filteredUrls.length; i++) {
+    const url = filteredUrls[i]
+    log(`Applying for job number: ${i + 1}`)
     log(`Successfully aplied for ${bot.jobsAppliedFor} jobs`)
     try {
       const success = await apply(`https://www.linkedin.com${url}`)(bot)

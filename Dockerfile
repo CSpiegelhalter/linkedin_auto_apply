@@ -1,5 +1,5 @@
 # Use the official Playwright base image
-FROM mcr.microsoft.com/playwright:focal
+FROM mcr.microsoft.com/playwright:v1.40.1-focal
 
 # Set working directory
 WORKDIR /app
@@ -8,24 +8,22 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm install
 
-# Copy the rest of your code
-COPY ./src ./src
-
 # Install required Playwright dependencies
 RUN npx playwright install-deps
 
-# Install VNC, Xvfb, and Fluxbox
-RUN apt-get update && apt-get install -y \
-    xvfb \
-    x11vnc \
-    fluxbox \
-    && rm -rf /var/lib/apt/lists/*
+COPY ./src ./src
+COPY tsconfig.json ./
 
-# Expose port 5900 for VNC
-EXPOSE 5900
+# Copy environment variables
+COPY .env .env
 
-# Set environment variables for display
-ENV DISPLAY=:99
+# Run the build process
+RUN npm run build
 
-# Start Xvfb, Fluxbox, and x11vnc, then run Playwright tests
-CMD ["sh", "-c", "Xvfb :99 -screen 0 1920x1080x24 & fluxbox & x11vnc -display :99 -forever -passwd vncpassword & npx tsx main.ts"]
+# Remove source code after build
+RUN rm -rf ./src
+
+# Copy the built files
+COPY ./dist ./dist
+
+CMD ["npm", "run", "start"]

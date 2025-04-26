@@ -2,10 +2,12 @@
   "name": "linkedin_auto_apply",
   "version": "1.0.0",
   "description": "Automated way of applying to jobs on linkedin",
-  "main": "index.js",
-  "type": "module",
+  "main": "main.js",
   "scripts": {
-    "run": "npx tsx main.ts"
+    "start": "node dist/main.js",
+    "build": "npx tsc",
+    "start-local": "cross-env ENV_NAME=local node dist/main.js",
+    "clean": "rmdir /s /q dist"
   },
   "repository": {
     "type": "git",
@@ -21,6 +23,7 @@
   "devDependencies": {
     "@playwright/test": "^1.40.1",
     "@types/node": "^20.10.5",
+    "cross-env": "^7.0.3",
     "tsx": "^4.7.0"
   },
   "dependencies": {

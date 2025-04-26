@@ -35,7 +35,8 @@ export class NodeBot implements Bot {
 
   public static async getInstance(): Promise<NodeBot> {
     if (!NodeBot.instance) {
-      const browser = await chromium.launch({ headless: false })
+      const env = process.env.ENV_NAME !== 'local'
+      const browser = await chromium.launch({ headless: env })
       const context = await browser.newContext()
       const page = await context.newPage()
       const actions = allActions

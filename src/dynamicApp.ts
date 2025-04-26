@@ -198,6 +198,7 @@ const fillAllDropdownsById =
     pop?: boolean
   }): BotAction =>
   async (bot: Bot): Promise<void> => {
+    try {
     const findAll = await bot.page.$$(xpath)
 
     if (findAll?.length > 0 && pop) {
@@ -213,6 +214,9 @@ const fillAllDropdownsById =
         log(`${errorMessage}: ${e}`)
       }
     }
+  } catch (e) {
+    log(`${errorMessage } -- outside for loop?: ${e}`)
+  }
   }
 
 const clickCheckboxes =
@@ -281,7 +285,6 @@ const handleYesNoDropdowns =
       const labels = await bot.page.$$(
         '//label[following-sibling::span[following-sibling::select[@aria-required="true"]]]'
       )
-      console.log(labels)
       const labelInnerTexts = []
       for (const t of labels) {
         const tpromise = await t.innerText()
@@ -289,7 +292,6 @@ const handleYesNoDropdowns =
         labelInnerTexts.push(toAdd)
       }
 
-      console.log(labelInnerTexts)
 
       // Step 2: Create an object mapping inner texts to answerYesOrNo results
       const labelAnswerMap: { [key: string]: string } = {}
@@ -300,10 +302,10 @@ const handleYesNoDropdowns =
         const button = await bot.page.$(
           `//select[preceding-sibling::span[preceding-sibling::label[span[text()="${key}"]]]]`
         )
-        button.selectOption(labelAnswerMap[key])
+        await button.selectOption(labelAnswerMap[key])
       }
     } catch (e) {
-      console.log(`FAILED TO FILL OUT DROPDOWNS: ${e}`)
+      log(`FAILED TO FILL OUT DROPDOWNS: ${e}`)
     }
   }
 
@@ -320,7 +322,6 @@ async (bot: Bot): Promise<void> => {
         // Iterate over each option and select based on the values "White" or "Male"
         for (const option of options) {
           const optionText = (await option?.innerText()).replace(/\n/g, '').trim();
-          console.log(optionText)
 
           if (optionText.toLowerCase().includes('white')) {
             // Select the "White" option
@@ -440,7 +441,7 @@ const hearAboutUs =
         element.selectOption(values[other])
       }
     } catch (e) {
-      console.log(`Failed to tell them how we hear about them... ${e}`)
+      log(`Failed to tell them how we hear about them... ${e}`)
     }
   }
 const handleAdditionalQuestions =
